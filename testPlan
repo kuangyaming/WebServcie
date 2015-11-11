@@ -1,0 +1,62 @@
+# normal case
+curl -i http://localhost:5000/Fib/api/v1.0/0
+curl -i http://localhost:5000/Fib/api/v1.0/1
+curl -i http://localhost:5000/Fib/api/v1.0/2
+curl -i http://localhost:5000/Fib/api/v1.0/5
+curl -i http://localhost:5000/Fib/api/v1.0/10
+curl -i http://localhost:5000/Fib/api/v1.0/100
+curl -i http://localhost:5000/Fib/api/v1.0/1500
+# error case
+curl -i http://localhost:5000/Fib/api/v1.0/
+curl -i http://localhost:5000/Fib/
+curl -i http://localhost:5000/
+curl -i http://localhost:5000/asd/asdf/232@#$/@#$
+curl -i http://localhost:5000/Fib/api/v1.0/abcd
+curl -i http://localhost:5000/Fib/api/v1.0/-1
+curl -i http://localhost:5000/Fib/api/v1.0/-100
+curl -i http://localhost:5000/Fib/-23
+
+# Other test scenarios to cover
+# 1. High concurrent load testing 
+#    * Less than 10 concurrent REST GET requests
+#    * 100 concurrent REST GET requests
+#    * Response time mesurement per GET request 
+#
+# 2. Scalability Testing: 
+#    
+#    Very large Fabonacci number
+#   
+#    Example:
+#    curl -i http://localhost:5000/Fib/api/v1.0/100000
+#    curl -i http://localhost:5000/Fib/api/v1.0/1000000
+#    curl -i http://localhost:5000/Fib/api/v1.0/10000000
+#
+# 3. Per-Thread Performance Testing 
+#    Measure per-thread performance. 
+#
+#    Example: 
+#    curl -i http://localhost:5000/Fib/api/v1.0/100000
+#
+#    A simple implementation might caculate all the fabonacci numbers in memory then return to 
+#    user in one JSON message.
+#    However, when the fabonacci number is very large, it might take a long time to response to the client. 
+#    To improve user experience, the working thread need to build up a small set of fabonacci list one bach at a time 
+#    so that client could get responsive output in a continuous way.
+#
+# 4. Caching Capability:
+#    
+#    Given a very large Fabonacci number, test several times to see whether the response time will reduce dramatically.
+#    e.g.
+#    curl -i http://localhost:5000/Fib/api/v1.0/100000 // 1st GET of 100000
+#    curl -i http://localhost:5000/Fib/api/v1.0/100000 // 2nd GET of 100000
+#    curl -i http://localhost:5000/Fib/api/v1.0/100000 // 3rd GET of 100000
+#    curl -i http://localhost:5000/Fib/api/v1.0/200000 // 3rd GET of 100000
+#
+#    Analysis:
+#    * If the web service w/ multithreading caches latest run of fabinacci array, 
+#      the list of fabonacci numbers could be returned faster since no re-caculation should 
+#      need to be done for 2nd and 3rd run.
+#    
+#    * For the 4th run, only the increamental from 100000 ~ 200000 fabonacci numbers need to 
+#      be caculated.
+# 
